@@ -88,6 +88,12 @@ class GameParser {
       }
     });
 
+    // Recalculate total kills based on individual player kills
+    game.totalKills = Object.values(game.kills).reduce(
+      (total: number, kills: number) => total + kills,
+      0
+    );
+
     return game;
   }
 

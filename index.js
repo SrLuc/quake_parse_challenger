@@ -70,6 +70,8 @@ var GameParser = /** @class */ (function () {
                 }
             }
         });
+        // Recalculate total kills based on individual player kills
+        game.totalKills = Object.values(game.kills).reduce(function (total, kills) { return total + kills; }, 0);
         return game;
     };
     GameParser.prototype.parseKill = function (line) {
