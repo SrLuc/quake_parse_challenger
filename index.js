@@ -37,13 +37,13 @@ function processGameFile() {
             var fileName = "game_".concat(game.gameId, ".txt");
             var filePath = path.join("games", fileName);
             fs.writeFileSync(filePath, gameSection_1.join("\n"));
-            console.log("Game section ".concat(game.gameId, " has been written to ").concat(filePath));
             var gameHash = "game_".concat(game.gameId);
             sections[gameHash] = {
                 total_kills: game.totalKills,
                 players: game.players.map(function (player) { return player.name; }),
                 kills: game.kills,
             };
+            console.log("Game ".concat(game.gameId, " has been added to the game archive."));
             return sections;
         }, {});
         //Cria um arquivo json com as informações dos jogos

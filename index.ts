@@ -39,9 +39,6 @@ export function processGameFile() {
       const fileName = `game_${game.gameId}.txt`;
       const filePath = path.join("games", fileName);
       fs.writeFileSync(filePath, gameSection.join("\n"));
-      console.log(
-        `Game section ${game.gameId} has been written to ${filePath}`
-      );
 
       const gameHash = `game_${game.gameId}`;
       sections[gameHash] = {
@@ -50,6 +47,7 @@ export function processGameFile() {
         kills: game.kills,
       };
 
+      console.log(`Game ${game.gameId} has been added to the game archive.`);
       return sections;
     }, {});
 
