@@ -1,140 +1,192 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
-try {
-    // Read the contents of the file
-    const fileContent: string = fs.readFileSync('games.log', 'utf8');
-    
-    // Split the content by lines
-    const lines: string[] = fileContent.split('\n');
-    
-    // Initialize variables to track the lines between markers
-    let isInGameSection: boolean = false;
-    let gameSection: string[] = [];
-    let gameSections: any = {}; // Using an object instead of an array
-    let gameId = 1; // Initialize the game ID
-    
-    // Process each line
-    lines.forEach((line, index) => {
-        if (line.includes('InitGame:')) {
-            // Start of a new game section
-            isInGameSection = true;
-            gameSection = [];
-        } else if (line.includes('ShutdownGame:')) {
-            // End of the current game section
-            isInGameSection = false;
-            
-            // Parse the game information
-            const gameInfo = parseGameSection(gameSection);
-            
-            // Add the game info to the object with the key 'game_X'
-            gameSections[`game_${gameId}`] = gameInfo;
+class Player {
+  name: string;
+  kills: number;
 
-            // Write the game section to a new file
-            const fileName = `game_${gameId}.txt`;
-            // Specify the full path to save the file in the 'games' folder
-            const filePath = path.join('games', fileName);
-            fs.writeFileSync(filePath, gameSection.join('\n'));
-            console.log(`Game section ${gameId} has been written to ${filePath}`);
-            
-            // Increment the game ID
-            gameId++;
-        } else if (isInGameSection) {
-            // Inside a game section, add the line to the current section
-            gameSection.push(line);
-        }
-    });
-    
-    // Remove the 'id' field from each game section
-    Object.values(gameSections).forEach((game: any) => {
-        delete game.id;
-    });
-    
-    // Write the game sections to a JSON archive
-    fs.writeFileSync('game_archive.json', JSON.stringify(gameSections, null, 2));
-    console.log('Game archive created successfully.');
-
-} catch (error) {
-    console.error('An error occurred while reading or processing the file:', error);
+  constructor(name: string) {
+    this.name = name;
+    this.kills = 0;
+  }
 }
 
-function parseGameSection(section: string[]): any {
-    const game: any = {
-        total_kills: 0,
-        players: [],
-        kills: {}
-    };
-    
-    let shouldDecrementNextKill = false; // Flag to track if next kill should be decremented
-    
-    const encounteredPlayers: Set<string> = new Set(); // Set to store encountered players
-    
+class Game {
+  gameId: number;
+  totalKills: number;
+  players: Player[];
+  kills: { [key: string]: number };
+
+  constructor(gameId: number) {
+    this.gameId = gameId;
+    this.totalKills = 0;
+    this.players = [];
+    this.kills = {};
+  }
+
+  addPlayer(playerName: string) {
+    const player = new Player(playerName);
+    this.players.push(player);
+    this.kills[playerName] = 0;
+  }
+
+  incrementKill(playerName: string) {
+    this.kills[playerName]++;
+    this.totalKills++;
+  }
+
+  decrementKill(playerName: string) {
+    this.kills[playerName]--;
+    this.totalKills--;
+  }
+}
+
+class GameParser {
+  games: Game[];
+
+  constructor() {
+    this.games = [];
+  }
+
+  parseGameSection(section: string[]): Game {
+    const game = new Game(this.games.length + 1);
+
+    let shouldDecrementNextKill = false;
+    const encounteredPlayers: Set<string> = new Set();
+
     section.forEach((line, index) => {
-        // Check for lines containing player information
-        if (line.includes('ClientUserinfoChanged')) {
-            const playerNameStartIndex = line.indexOf('n\\') + 2;
-            const playerNameEndIndex = line.indexOf('\\t\\');
-            const playerName = line.slice(playerNameStartIndex, playerNameEndIndex);
-            if (!encounteredPlayers.has(playerName)) { // Check if player already encountered
-                game.players.push(playerName);
-                game.kills[playerName] = 0; // Initialize player kills to 0
-                encounteredPlayers.add(playerName); // Add player to encountered set
-            }
+      if (line.includes("ClientUserinfoChanged")) {
+        const playerNameStartIndex = line.indexOf("n\\") + 2;
+        const playerNameEndIndex = line.indexOf("\\t\\");
+        const playerName = line.slice(playerNameStartIndex, playerNameEndIndex);
+        if (!encounteredPlayers.has(playerName)) {
+          game.addPlayer(playerName);
+          encounteredPlayers.add(playerName);
         }
-        
-        // Check for lines containing kill information
-        if (line.includes('Kill:')) {
-            // Increment total kills for each occurrence of "Kill:"
-            game.total_kills++;
-            
-            // Parse the kill information
-            const killInfo = parseKill(line);
-            
-            // If <world> killed a player, decrement that player's kill count
-            if (killInfo.killer === '<world>') {
-                const killedPlayer = killInfo.killed;
-                if (game.kills.hasOwnProperty(killedPlayer)) {
-                    game.kills[killedPlayer]--;
-                }
-            } else {
-                // Update player kills
-                if (!game.players.includes(killInfo.killer)) {
-                    game.players.push(killInfo.killer);
-                    game.kills[killInfo.killer] = 0;
-                }
-                
-                // Decrement kill if flag is set
-                if (shouldDecrementNextKill) {
-                    game.kills[killInfo.killer]--;
-                    shouldDecrementNextKill = false; // Reset flag
-                } else {
-                    game.kills[killInfo.killer]++;
-                }
-            }
+      }
 
-            // Check if next kill should be decremented
-            if (killInfo.killed === '<world>') {
-                shouldDecrementNextKill = true;
-            }
+      if (line.includes("Kill:")) {
+        game.totalKills++;
+
+        const killInfo = this.parseKill(line);
+
+        if (killInfo.killer === "<world>") {
+          const killedPlayer = killInfo.killed;
+          if (game.kills.hasOwnProperty(killedPlayer)) {
+            game.decrementKill(killedPlayer);
+          }
+        } else {
+          if (!game.players.find((player) => player.name === killInfo.killer)) {
+            game.addPlayer(killInfo.killer);
+          }
+          game.incrementKill(killInfo.killer);
+
+          if (killInfo.killed === "<world>") {
+            shouldDecrementNextKill = true;
+          }
         }
+      }
     });
-    
-    return game;
-}
 
-function parseKill(line: string): { killer: string, killed: string } {
+    return game;
+  }
+
+  parseKill(line: string): { killer: string; killed: string } {
     const playerNameRegex = /:\s([^:]+)\skilled/;
     const playerNameMatch = line.match(playerNameRegex);
 
     if (playerNameMatch) {
-        const killer = playerNameMatch[1];
-        
-        const parts: string[] = line.split(' ');
-        const killedIndex = parts.findIndex(part => part === 'by') - 1;
-        const killed: string = parts.slice(-killedIndex).join(' ');
-        
-        return { killer, killed };
+      const killer = playerNameMatch[1];
+
+      const parts: string[] = line.split(" ");
+      const killedIndex = parts.findIndex((part) => part === "by") - 1;
+      const killed: string = parts.slice(-killedIndex).join(" ");
+
+      return { killer, killed };
     } else {
-        return { killer: '', killed: '' };
+      return { killer: "", killed: "" };
     }
+  }
+
+  generateReports() {
+    // Generate game reports
+    const gameReports = this.games.map((game) => `game_${game.gameId}`);
+    fs.writeFileSync("game_reports.json", JSON.stringify(gameReports, null, 2));
+
+    // Generate player ranking
+    const playerKills = this.calculatePlayerKills();
+    const sortedPlayerKills = Object.entries(playerKills)
+      .map(([player, kills]) => ({ player, kills }))
+      .sort((a, b) => b.kills - a.kills);
+    fs.writeFileSync(
+      "player_ranking.json",
+      JSON.stringify(sortedPlayerKills, null, 2)
+    );
+
+    console.log("Game reports and player ranking created successfully.");
+  }
+
+  calculatePlayerKills(): { [key: string]: number } {
+    const playerKills: { [key: string]: number } = {};
+
+    this.games.forEach((game) => {
+      game.players.forEach((player) => {
+        if (!playerKills[player.name]) {
+          playerKills[player.name] = 0;
+        }
+        playerKills[player.name] += player.kills;
+      });
+    });
+
+    return playerKills;
+  }
+}
+
+try {
+  const fileContent: string = fs.readFileSync("games.txt", "utf8");
+  const lines: string[] = fileContent.split("\n");
+
+  let isInGameSection: boolean = false;
+  let gameSection: string[] = [];
+
+  const gameParser = new GameParser();
+
+  lines.forEach((line, index) => {
+    if (line.includes("InitGame:")) {
+      isInGameSection = true;
+      gameSection = [];
+    } else if (line.includes("ShutdownGame:")) {
+      isInGameSection = false;
+      const game = gameParser.parseGameSection(gameSection);
+      gameParser.games.push(game);
+    } else if (isInGameSection) {
+      gameSection.push(line);
+    }
+  });
+
+  const gameSections = gameParser.games.reduce((sections, game) => {
+    const fileName = `game_${game.gameId}.txt`;
+    const filePath = path.join("games", fileName);
+    fs.writeFileSync(filePath, gameSection.join("\n"));
+    console.log(`Game section ${game.gameId} has been written to ${filePath}`);
+
+    const gameHash = `game_${game.gameId}`;
+    sections[gameHash] = {
+      total_kills: game.totalKills,
+      players: game.players.map((player) => player.name),
+      kills: game.kills,
+    };
+
+    return sections;
+  }, {});
+
+  fs.writeFileSync("game_archive.json", JSON.stringify(gameSections, null, 2));
+  console.log("Game archive created successfully.");
+
+  gameParser.generateReports();
+} catch (error) {
+  console.error(
+    "An error occurred while reading or processing the file:",
+    error
+  );
 }
