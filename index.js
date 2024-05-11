@@ -116,7 +116,7 @@ var GameParser = /** @class */ (function () {
     return GameParser;
 }());
 try {
-    var fileContent = fs.readFileSync("games.txt", "utf8");
+    var fileContent = fs.readFileSync("games.log", "utf8");
     var lines = fileContent.split("\n");
     var isInGameSection_1 = false;
     var gameSection_1 = [];
