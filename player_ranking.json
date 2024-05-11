@@ -1,22 +1,38 @@
 [
   {
     "player": "Isgalamido",
-    "kills": 0
-  },
-  {
-    "player": "Dono da Bola",
-    "kills": 0
-  },
-  {
-    "player": "Mocinha",
-    "kills": 0
+    "kills": 184
   },
   {
     "player": "Zeh",
-    "kills": 0
+    "kills": 158
   },
   {
     "player": "Assasinu Credi",
+    "kills": 143
+  },
+  {
+    "player": "Oootsimo",
+    "kills": 138
+  },
+  {
+    "player": "Dono da Bola",
+    "kills": 103
+  },
+  {
+    "player": "Mal",
+    "kills": 57
+  },
+  {
+    "player": "Chessus",
+    "kills": 42
+  },
+  {
+    "player": "Maluquinho",
+    "kills": 1
+  },
+  {
+    "player": "Mocinha",
     "kills": 0
   },
   {
@@ -24,27 +40,11 @@
     "kills": 0
   },
   {
-    "player": "Oootsimo",
-    "kills": 0
-  },
-  {
     "player": "UnnamedPlayer",
     "kills": 0
   },
   {
-    "player": "Maluquinho",
-    "kills": 0
-  },
-  {
-    "player": "Mal",
-    "kills": 0
-  },
-  {
     "player": "Chessus!",
-    "kills": 0
-  },
-  {
-    "player": "Chessus",
     "kills": 0
   }
 ]

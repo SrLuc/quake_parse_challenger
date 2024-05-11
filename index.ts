@@ -140,7 +140,7 @@ class GameParser {
         if (!playerKills[player.name]) {
           playerKills[player.name] = 0;
         }
-        playerKills[player.name] += player.kills;
+        playerKills[player.name] += game.kills[player.name]; // Corrigido para contabilizar as mortes do jogador no jogo atual
       });
     });
 
