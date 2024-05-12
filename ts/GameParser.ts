@@ -10,21 +10,20 @@ export default class GameParser {
 
   // Função para processar uma seção de jogo e retornar um objeto de jogo
   parseGameSection(section: string[]): Game {
-    // Cria um novo jogo
     const game = new Game(this.games.length + 1);
 
-    // Variável para controle de decremento de morte do jogador
     let shouldDecrementNextKill = false;
-
-    // Set para armazenar os jogadores encontrados na seção de jogo
     const encounteredPlayers: Set<string> = new Set();
 
-    // Itera sobre as linhas da seção de jogo para processar as informações
     section.forEach((line, index) => {
       if (line.includes("ClientUserinfoChanged")) {
         const playerNameStartIndex = line.indexOf("n\\") + 2;
         const playerNameEndIndex = line.indexOf("\\t\\");
-        const playerName = line.slice(playerNameStartIndex, playerNameEndIndex);
+        let playerName = line.slice(playerNameStartIndex, playerNameEndIndex);
+        if (playerName.endsWith("!")) {
+          // Ignorar jogadores com nomes incorretos
+          return;
+        }
         if (!encounteredPlayers.has(playerName)) {
           game.addPlayer(playerName);
           encounteredPlayers.add(playerName);
@@ -54,11 +53,14 @@ export default class GameParser {
       }
     });
 
-    // Atualiza o total de mortes do jogo com base nas mortes do jogador
+    // Recalculate total kills based on individual player kills
     game.totalKills = Object.values(game.kills).reduce(
       (total: number, kills: number) => total + kills,
       0
     );
+
+    // Remover jogadores com nomes incorretos do array de jogadores
+    game.players = game.players.filter((player) => !player.name.endsWith("!"));
 
     return game;
   }

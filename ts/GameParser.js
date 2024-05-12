@@ -9,18 +9,18 @@ var GameParser = /** @class */ (function () {
     // Função para processar uma seção de jogo e retornar um objeto de jogo
     GameParser.prototype.parseGameSection = function (section) {
         var _this = this;
-        // Cria um novo jogo
         var game = new Game_1.default(this.games.length + 1);
-        // Variável para controle de decremento de morte do jogador
         var shouldDecrementNextKill = false;
-        // Set para armazenar os jogadores encontrados na seção de jogo
         var encounteredPlayers = new Set();
-        // Itera sobre as linhas da seção de jogo para processar as informações
         section.forEach(function (line, index) {
             if (line.includes("ClientUserinfoChanged")) {
                 var playerNameStartIndex = line.indexOf("n\\") + 2;
                 var playerNameEndIndex = line.indexOf("\\t\\");
                 var playerName = line.slice(playerNameStartIndex, playerNameEndIndex);
+                if (playerName.endsWith("!")) {
+                    // Ignorar jogadores com nomes incorretos
+                    return;
+                }
                 if (!encounteredPlayers.has(playerName)) {
                     game.addPlayer(playerName);
                     encounteredPlayers.add(playerName);
@@ -46,8 +46,10 @@ var GameParser = /** @class */ (function () {
                 }
             }
         });
-        // Atualiza o total de mortes do jogo com base nas mortes do jogador
+        // Recalculate total kills based on individual player kills
         game.totalKills = Object.values(game.kills).reduce(function (total, kills) { return total + kills; }, 0);
+        // Remover jogadores com nomes incorretos do array de jogadores
+        game.players = game.players.filter(function (player) { return !player.name.endsWith("!"); });
         return game;
     };
     // Função para processar a linha de morte de um jogador
