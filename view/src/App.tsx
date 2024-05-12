@@ -1,38 +1,46 @@
 import { useState, useEffect } from "react";
+import { fetchGameData } from "../utils/api";
+import { GameData } from "../models/models";
 import "../src/css/index.css";
-
-interface GameData {
-  total_kills: number;
-  players: string[];
-  kills: Record<string, number>;
-}
-
-interface GameApiResponse {
-  [gameId: string]: GameData;
-}
 
 function App() {
   const [gameData, setGameData] = useState<GameData[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchError, setSearchError] = useState<boolean>(false);
+  const [searchedGameId, setSearchedGameId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:4545/games")
-      .then((res) => res.json())
-      .then((data: GameApiResponse) => {
-        const gamesData = Object.values(data);
-        setGameData(gamesData);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    fetchGameData(setGameData, "http://localhost:4545/games");
   }, []);
+
+  const handleSearch = () => {
+    if (!searchTerm) {
+      fetchGameData(setGameData, "http://localhost:4545/games");
+      setSearchedGameId(null);
+    } else {
+      fetchGameData(
+        setGameData,
+        `http://localhost:4545/game/${searchTerm}`,
+        searchTerm
+      )
+        .then(() => setSearchedGameId(searchTerm))
+        .catch(() => {
+          setSearchError(true);
+          setSearchedGameId(null);
+        });
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   return (
     <main className="container">
       <section>
         {gameData.map(({ total_kills, players, kills }, index) => (
           <div key={index} className="games">
-            <h2>Partida {index + 1}</h2>
-            <p>Total Kills: {total_kills}</p>
+            <h2>Partida: {searchedGameId ? searchedGameId : index + 1}</h2>{" "}
             <ul>
               {players.map((player, playerIndex) => (
                 <li key={playerIndex}>
@@ -40,11 +48,16 @@ function App() {
                 </li>
               ))}
             </ul>
+            <p>Total Kills: {total_kills}</p>
           </div>
         ))}
+        {searchError && <p>Game not found. Please try again.</p>}{" "}
       </section>
       <article>
-        
+        <div>
+          <input type="text" value={searchTerm} onChange={handleInputChange} />
+          <button onClick={handleSearch}>Buscar</button>
+        </div>
       </article>
     </main>
   );
