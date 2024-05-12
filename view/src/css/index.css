@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+main {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  height: 100vh;
+}
+section {
+  width: 35%;
+  height: 100vh;
+  overflow-y: auto;
+
+  .games {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    p {
+      margin: 5px 0;
+    }
+  }
+}
+
+article {
+  width: 60%;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+ul {
+  list-style-type: none;
+
+  li {
+    margin: 5px 0;
+  }
+}

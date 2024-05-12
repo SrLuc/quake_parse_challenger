@@ -1,7 +1,10 @@
+import * as gameController from "./controllers/gameController";
+
 const express = require("express");
 const app = express();
 
-import * as gameController from "./controllers/gameController";
+var cors = require("cors");
+app.use(cors());
 
 app.get("/games", gameController.getGames);
 app.get("/game/:id", gameController.getGameById);
