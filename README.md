@@ -40,6 +40,12 @@ Neste desafio, todas as rotas a seguir devem utilizar a porta padrão http://loc
 - GET **/reports**: Retorna um relatório sobre os jogos (somente hash).
 - GET **/ranking**: Retorna o ranking dos jogadores com base no número de kills.
 
+### Configuração do Ambiente
+
+Antes de executar o projeto, seria necessário configurar algumas variáveis de ambiente.
+
+no entanto, a nível de desafio de Github e também para facilitar o execução do projeto, não configurei variáveis de ambiente para este projeto.
+
 ## Instalação
 
 No seu terminal rode os seguintes comandos:
@@ -50,12 +56,6 @@ No seu terminal rode os seguintes comandos:
   npm install
 
 ```
-
-### Configuração do Ambiente
-
-Antes de executar o projeto, seria necessário configurar algumas variáveis de ambiente.
-
-no entanto, a nível de desafio de desafio de Github e também para facilitar o execução do projeto, não configurei variáveis de ambiente para este projeto.
 
 ## Rodando o Backend
 
