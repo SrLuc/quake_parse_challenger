@@ -14,22 +14,26 @@ O parser é capaz de:
 
 - Gerar relatórios em JSON que podem ser usados para análise posterior dos jogos.
 
+- Gerar arquivos .txt individuais de cada partida.
+
 ## Informações Complementares
 
-Além do parser principal, o projeto conta com outros arquivos e funcionalidades importantes:
+### Além do parser principal, o projeto conta com outros arquivos e funcionalidades importantes.
 
 **index.ts**:
 O arquivo index.ts é responsável por orquestrar o funcionamento do parser como um todo.
-Ele chama as classes e métodos necessários para realizar a leitura do arquivo de log, processar os dados e gerar os resultados desejados. Um script _npm run index_ está disponível para executar este arquivo usando o Node.js.
+Ele chama as classes e métodos necessários para realizar a leitura do arquivo de log, processar os dados e gerar os resultados desejados. Um script _npm run index_ está disponível para executar este arquivo usando o Node.js na raíz do projeto.
 
 **server.ts**:
 O arquivo server.ts é responsável por iniciar o servidor da API em Node.js.
-Ele configura as rotas definidas no arquivo app.ts e disponibiliza a API para receber requisições dos clientes.
+Ele configura as rotas definidas no arquivo app.ts e disponibiliza a API para receber requisições.
 
 **app.ts**:
-arquivo app.ts contém a aplicação da API, onde estão definidas as rotas e controladores responsáveis por lidar com as requisições dos clientes. As rotas são descritas abaixo:
+arquivo app.ts contém a aplicação da API, onde estão definidas as rotas e controladores responsáveis por lidar com as requisições. As rotas são descritas abaixo:
 
 ## Rotas
+
+Neste desafio, todas as rotas a seguir devem utilizar a porta padrão http://localhost:4545.
 
 - GET **/games**: Retorna a lista com informações detalhadas de todos os jogos registrados.
 - GET **/game/:id**: Retorna as informações de um jogo específico com base no seu game_id.
@@ -49,21 +53,28 @@ No seu terminal rode os seguintes comandos:
 
 ### Configuração do Ambiente
 
-Antes de executar o projeto, é necessário configurar algumas variáveis de ambiente.
-Para isso, siga os passos abaixo:
+Antes de executar o projeto, seria necessário configurar algumas variáveis de ambiente.
 
-Na raiz do seu projeto, crie um arquivo chamado .env
+no entanto, a nível de desafio de desafio de Github e também para facilitar o execução do projeto, não configurei variáveis de ambiente para este projeto.
 
-Adicione a seguinte variável de ambiente ao arquivo:
+## Rodando o Backend
 
-`API_PORT` = 1234
-
-Isto vai definir porta em que o servidor da API será executado.
-
-## Rodando
-
-Para executar a API, rode o comando
+Para executar a API, na raíz do projeto, execute o comando
 
 ```bash
   npm run start
+```
+
+## Rodando o Frontend
+
+Para instalar as dependências do Frontend, navegue para o diretório ./view e execute o comando.
+
+```bash
+  npm install
+```
+
+E para executar o Vite, no mesmo diretório ./view, execute o comando.
+
+```bash
+  npm run dev
 ```
