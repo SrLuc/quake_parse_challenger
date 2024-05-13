@@ -44,7 +44,7 @@ article {
     padding: 10px;
 
     input {
-      margin: 5px;
+      margin-left: 15px;
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
@@ -52,6 +52,7 @@ article {
 
     button {
       padding: 10px;
+      margin: 5px;
       border-radius: 5px;
       border: none;
       background-color: #007bff;
@@ -66,5 +67,17 @@ ul {
 
   li {
     margin: 5px 0;
+  }
+}
+
+.dashboard {
+  border-radius: 15px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+
+  .dashH1 {
+    padding: 10px;
   }
 }

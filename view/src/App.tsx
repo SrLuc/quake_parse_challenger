@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchGameData } from "../utils/api";
 import { GameData } from "../models/models";
+import Dash from "../components/chart/Dash";
 import "../src/css/index.css";
 
 function App() {
@@ -55,8 +56,9 @@ function App() {
       </section>
       <article>
         <div>
-          <input type="text" value={searchTerm} onChange={handleInputChange} />
+          <input placeholder="type:1 or 2 or 3.." type="text" value={searchTerm} onChange={handleInputChange} />
           <button onClick={handleSearch}>Buscar</button>
+          <Dash  />
         </div>
       </article>
     </main>

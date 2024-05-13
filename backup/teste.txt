@@ -5,7 +5,6 @@ export async function fetchGameData(
   apiUrl: string,
   searchTerm?: string
 ) {
-  
   try {
     let response;
     if (searchTerm) {
