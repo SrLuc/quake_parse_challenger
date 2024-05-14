@@ -6,7 +6,7 @@ import "../src/css/index.css";
 
 function App() {
   const [gameData, setGameData] = useState<GameData[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("" || null );
   const [searchError, setSearchError] = useState<boolean>(false);
   const [searchedGameId, setSearchedGameId] = useState<string | null>(null);
 
@@ -15,7 +15,7 @@ function App() {
   }, []);
 
   const handleSearch = () => {
-    if (!searchTerm) {
+    if (!searchTerm || searchTerm == 0) {
       fetchGameData(setGameData, "http://localhost:4545/games");
       setSearchedGameId(null);
     } else {
