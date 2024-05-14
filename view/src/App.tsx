@@ -15,6 +15,12 @@ function App() {
   }, []);
 
   const handleSearch = () => {
+    if (searchTerm && searchTerm > gameData.length.toString()) {
+      setSearchError(true);
+      alert("Game not found. Please try again.");
+      return;
+    }
+
     if (!searchTerm || searchTerm === "0") {
       fetchGameData(setGameData, "http://localhost:4545/games");
       setSearchedGameId(null);

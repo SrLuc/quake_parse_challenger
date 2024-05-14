@@ -1,4 +1,4 @@
-import { Bar } from "@ant-design/charts";
+import { Column } from "@ant-design/charts";
 import { useEffect, useState } from "react";
 import { fetchGameData } from "../../utils/api";
 import { GameData } from "../../models/models";
@@ -18,14 +18,8 @@ const Dash = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashH1">Player Kill's Ranking</h1>
-      <Bar
-        height={400}
-        xField="Player"
-        yField="value"
-        data={data}
-        
-      />
+      <h1 className="dashH1">Kill Player's Ranking</h1>
+      <Column height={400} xField="Player" yField="value" data={data} />
     </div>
   );
 };
