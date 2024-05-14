@@ -56,9 +56,14 @@ function App() {
       </section>
       <article>
         <div>
-          <input placeholder="type:1 or 2 or 3.." type="text" value={searchTerm} onChange={handleInputChange} />
+          <input
+            placeholder="type:1 or 2 or 3 or 0 to search all matches"
+            type="text"
+            value={searchTerm}
+            onChange={handleInputChange}
+          />
           <button onClick={handleSearch}>Buscar</button>
-          <Dash  />
+          <Dash />
         </div>
       </article>
     </main>
