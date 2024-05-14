@@ -24,7 +24,6 @@ const Dash = () => {
         xField="Player"
         yField="value"
         data={data}
-        colorField={"Player"}
       />
     </div>
   );
