@@ -33,7 +33,7 @@ arquivo app.ts contém a aplicação da API, onde estão definidas as rotas e co
 
 ## Rotas
 
-Neste desafio, todas as rotas a seguir devem utilizar a porta padrão http://localhost:4545.
+Neste desafio, todas as rotas estão utilizando a porta padrão http://localhost:4545.
 
 - GET **/games**: Retorna a lista com informações detalhadas de todos os jogos registrados.
 - GET **/game/:id**: Retorna as informações de um jogo específico com base no seu game_id.
