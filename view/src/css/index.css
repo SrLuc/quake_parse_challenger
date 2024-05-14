@@ -4,6 +4,7 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
   transition: all 0.3s;
+  list-style: none;
 }
 
 body {
