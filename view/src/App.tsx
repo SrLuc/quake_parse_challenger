@@ -6,7 +6,7 @@ import "../src/css/index.css";
 
 function App() {
   const [gameData, setGameData] = useState<GameData[]>([]);
-  const [searchTerm, setSearchTerm] = useState("" || null );
+  const [searchTerm, setSearchTerm] = useState<string | null>(null);
   const [searchError, setSearchError] = useState<boolean>(false);
   const [searchedGameId, setSearchedGameId] = useState<string | null>(null);
 
@@ -15,7 +15,7 @@ function App() {
   }, []);
 
   const handleSearch = () => {
-    if (!searchTerm || searchTerm == 0) {
+    if (!searchTerm || searchTerm === "0") {
       fetchGameData(setGameData, "http://localhost:4545/games");
       setSearchedGameId(null);
     } else {
@@ -41,7 +41,7 @@ function App() {
       <section>
         {gameData.map(({ total_kills, players, kills }, index) => (
           <div key={index} className="games">
-            <h2>Partida: {searchedGameId ? searchedGameId : index + 1}</h2>{" "}
+            <h2>Partida: {searchedGameId ? searchedGameId : index + 1}</h2>
             <ul>
               {players.map((player, playerIndex) => (
                 <li key={playerIndex}>
@@ -52,14 +52,14 @@ function App() {
             <p>Total Kills: {total_kills}</p>
           </div>
         ))}
-        {searchError && <p>Game not found. Please try again.</p>}{" "}
+        {searchError && <p>Game not found. Please try again.</p>}
       </section>
       <article>
         <div>
           <input
             placeholder="type:1 or 2 or 3 or 0 to search all matches"
             type="text"
-            value={searchTerm}
+            value={searchTerm || ""}
             onChange={handleInputChange}
           />
           <button onClick={handleSearch}>Buscar</button>
